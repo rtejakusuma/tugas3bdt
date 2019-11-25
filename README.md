@@ -358,8 +358,6 @@ end
     ```
     ![repl_red3](https://user-images.githubusercontent.com/32433590/69501542-7e505300-0f38-11ea-9191-6adee0dc4b72.png)
     
-## Install Wordpress pada server wordpress
-
 ## Fail Over Test
 - Masuk ke `redis1` dengan cara `sudo vagrant ssh redis1` karena `redis1` ialah merupakan master
 - Lalu ketikkan
@@ -377,4 +375,28 @@ redis-cli -h 192.168.16.14
 info replication
 ```
 ![fail2](https://user-images.githubusercontent.com/32433590/69501591-e6069e00-0f38-11ea-9fad-140eac49007b.png)
+## Install Wordpress pada server wordpress
+1. Masuk ke wordpress melalui browser. Dengan cara
+```bash
+[IP wordpress]/index.php
+```
+2. Lalu pilih Bahasa dan Membuat sebuah account
+3. Login ke `wp-admin`
+4. Pilih menu cari `Redis Object Cache` kemudian install
+5. Tambahkan konfigurasi berikut pada `/var/www/html/wp-config.php` pada `wordpress1` dibawah `define('DB_COLLATE', '');`
+```bash
+define('FS_METHOD', 'direct');
+define('WP_REDIS_SENTINEL', 'redis-cluster');
+define('WP_REDIS_SERVERS', ['tcp://192.168.16.12:26379', 'tcp://192.168.16.13:26379', 'tcp://192.168.16.14:26379']);
+```
+6. Ubah tulisan `INFO` menjadi `info` pada `/var/www/html/wp-content/plugins/redis-cache/includes/predis/src/Command/ServerInfo.php`
+7. Aktifkan `Redis Object Cache`
+8. Lalu cek `diagnostic`<br>
+![wordcache](https://user-images.githubusercontent.com/32433590/69520941-77edc580-0f90-11ea-9e92-deadf336c136.png)
 ## JMETER Test
+1. 50 Koneksi<br>
+![50](https://user-images.githubusercontent.com/32433590/69520854-3bba6500-0f90-11ea-8cdc-53f497c18c9c.png)
+2. 112 Koneksi<br>
+![112](https://user-images.githubusercontent.com/32433590/69520859-3ceb9200-0f90-11ea-84f9-8fda741b0d34.png)
+3. 212 Koneksi<br>
+![212](https://user-images.githubusercontent.com/32433590/69520864-3e1cbf00-0f90-11ea-9b56-3421d79f37e4.png)
