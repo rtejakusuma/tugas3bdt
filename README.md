@@ -2,6 +2,7 @@
 Raden Teja Kusuma (5111640000012)
 
 ## Skema
+![Untitled Diagram](https://user-images.githubusercontent.com/32433590/69551403-33354f00-0fcf-11ea-834e-2063f6821e53.png)
 ## Spesifikasi
 1. Redis Server:
     - `redis1`:
